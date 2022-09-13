@@ -4,14 +4,15 @@ from django.core.validators import RegexValidator
 from shared.django.model import BaseModel
 
 phone_regex = RegexValidator(
-    regex=r'^998[0-9]{9}$',
-    message="Phone number must be entered in the format: '998 [XX] [XXX XX XX]'. Up to 12 digits allowed."
+    regex=r"^998[0-9]{9}$",
+    message="Phone number must be entered in the format: '998 [XX] [XXX XX XX]'. Up to 12 digits allowed.",
 )
 
 
 class ContactManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(user__is_active=True)
+
 
 class Contact(BaseModel):
     MALE = "male"
@@ -27,11 +28,19 @@ class Contact(BaseModel):
 
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE)
 
-    phone = models.CharField(max_length=12, validators=[phone_regex], null=True, blank=True)
+    phone = models.CharField(
+        max_length=12, validators=[phone_regex], null=True, blank=True
+    )
     email = models.EmailField(null=True, blank=True)
-    photo = models.ImageField(upload_to='contacts/', null=True, blank=True)
+    photo = models.ImageField(upload_to="contacts/", null=True, blank=True)
 
-    author = models.ForeignKey("users.User", on_delete=models.PROTECT, related_name='contacts', null=True, blank=True)
+    author = models.ForeignKey(
+        "users.User",
+        on_delete=models.PROTECT,
+        related_name="contacts",
+        null=True,
+        blank=True,
+    )
 
     level = models.IntegerField(blank=True, null=True)
     objects = ContactManager()
@@ -51,4 +60,5 @@ class Contact(BaseModel):
         return self.full_name
 
     class Meta:
-        ordering = ('-id',)
+        ordering = ("-id",)
+        abstract = True
