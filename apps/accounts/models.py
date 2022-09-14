@@ -9,12 +9,12 @@ phone_regex = RegexValidator(
 )
 
 
-class ContactManager(models.Manager):
+class ProfileManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(user__is_active=True)
 
 
-class Contact(BaseModel):
+class Profile(BaseModel):
     MALE = "male"
     FEMALE = "female"
 
@@ -22,28 +22,25 @@ class Contact(BaseModel):
         (MALE, "male"),
         (FEMALE, "female"),
     )
+    FREE_MEMBERSHIP_LEVEL = "Ad Supported - Free"
+    PREMIUM_MEMBERSHIP_LEVEL = "Ad Supported - Free"
+    MEMBERSHIP_LEVEL_CHOICES = (
+        (FREE_MEMBERSHIP_LEVEL, 'free'),
+        (PREMIUM_MEMBERSHIP_LEVEL, 'premium')
+    )
+
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     middle_name = models.CharField(max_length=255, null=True, blank=True)
-
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE)
-
     phone = models.CharField(
         max_length=12, validators=[phone_regex], null=True, blank=True
     )
-    email = models.EmailField(null=True, blank=True)
     photo = models.ImageField(upload_to="contacts/", null=True, blank=True)
-
-    author = models.ForeignKey(
-        "users.User",
-        on_delete=models.PROTECT,
-        related_name="contacts",
-        null=True,
-        blank=True,
-    )
-
-    level = models.IntegerField(blank=True, null=True)
-    objects = ContactManager()
+    level = models.IntegerField(default=1, blank=True, null=True)
+    objects = ProfileManager()
+    author = models.ForeignKey("users.User", on_delete=models.PROTECT, related_name='contacts', null=True, blank=True)
+    
 
     @property
     def full_name(self):
@@ -61,4 +58,3 @@ class Contact(BaseModel):
 
     class Meta:
         ordering = ("-id",)
-        abstract = True

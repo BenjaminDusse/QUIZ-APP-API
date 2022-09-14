@@ -2,7 +2,7 @@ from django.db import models
 from shared.django.model import BaseModel, DeleteModel
 
 
-from contact.models import Contact
+from accounts.models import Profile
 
 class Question(BaseModel):
     content = models.TextField(max_length=500)
