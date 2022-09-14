@@ -40,7 +40,7 @@ class Profile(BaseModel):
     level = models.IntegerField(default=1, blank=True, null=True)
     objects = ProfileManager()
     author = models.ForeignKey("users.User", on_delete=models.PROTECT, related_name='contacts', null=True, blank=True)
-    
+
 
     @property
     def full_name(self):
