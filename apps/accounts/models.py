@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from core import settings
 
 from shared.django.model import BaseModel
 
@@ -11,7 +12,7 @@ phone_regex = RegexValidator(
 
 class ProfileManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(user__is_active=True)
+        return super().get_queryset().filter(profile__is_active=True)
 
 
 class Profile(BaseModel):
@@ -39,7 +40,7 @@ class Profile(BaseModel):
     photo = models.ImageField(upload_to="contacts/", null=True, blank=True)
     level = models.IntegerField(default=1, blank=True, null=True)
     objects = ProfileManager()
-    author = models.ForeignKey("users.User", on_delete=models.PROTECT, related_name='contacts', null=True, blank=True)
+    profile = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='contacts', null=True, blank=True)
 
 
     @property
