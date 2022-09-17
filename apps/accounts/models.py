@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from core import settings
-
+from django.templatetags.static import static
 from shared.django.model import BaseModel
 
 phone_regex = RegexValidator(
@@ -12,7 +12,7 @@ phone_regex = RegexValidator(
 
 class ProfileManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(profile__is_active=True)
+        return super().get_queryset().filter(user__is_active=True)
 
 
 class Profile(BaseModel):
@@ -26,36 +26,50 @@ class Profile(BaseModel):
     FREE_MEMBERSHIP_LEVEL = "Ad Supported - Free"
     PREMIUM_MEMBERSHIP_LEVEL = "Ad Supported - Free"
     MEMBERSHIP_LEVEL_CHOICES = (
-        (FREE_MEMBERSHIP_LEVEL, 'free'),
-        (PREMIUM_MEMBERSHIP_LEVEL, 'premium')
+        (FREE_MEMBERSHIP_LEVEL, "free"),
+        (PREMIUM_MEMBERSHIP_LEVEL, "premium"),
     )
 
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
-    middle_name = models.CharField(max_length=255, null=True, blank=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE)
     phone = models.CharField(
         max_length=12, validators=[phone_regex], null=True, blank=True
     )
-    photo = models.ImageField(upload_to="contacts/", null=True, blank=True)
+
+    email = models.EmailField()
+    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE)
+    photo = models.ImageField(upload_to="profile_images/%d/%m/%Y", null=True, blank=True)
     level = models.IntegerField(default=1, blank=True, null=True)
     objects = ProfileManager()
-    profile = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='contacts', null=True, blank=True)
-
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="contacts",
+        null=True,
+        blank=True,
+    )
+    default_pic_mapping = {'male': 'male_img.jpg', 'female': 'female_img.jpg'}
 
     @property
     def full_name(self):
         fullname = ""
-        if self.last_name:
-            fullname += self.last_name
         if self.first_name:
             fullname += f" {self.first_name}"
-        if self.middle_name:
-            fullname += f" {self.middle_name}"
+        if self.last_name:
+            fullname += self.last_name
         return fullname
 
+    # def save(self, *args, **kwargs): # here need write for dynamic default profile img
+    #     if not self.photo:
+    #         self.photo = 'images/{}'.format(self.photo[self.gender])
+    #     super().save(*args, **kwargs)
+
+
     def __str__(self):
-        return self.full_name
+        return self.user.username
+    
+
 
     class Meta:
         ordering = ("-id",)
