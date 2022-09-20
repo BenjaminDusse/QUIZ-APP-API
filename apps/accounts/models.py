@@ -32,7 +32,6 @@ class Profile(BaseModel):
 
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
-    gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE)
     phone = models.CharField(
         max_length=12, validators=[phone_regex], null=True, blank=True
     )
