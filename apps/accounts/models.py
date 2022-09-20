@@ -30,16 +30,17 @@ class Profile(BaseModel):
         (PREMIUM_MEMBERSHIP_LEVEL, "premium"),
     )
 
-    first_name = models.CharField(max_length=255, null=True, blank=True)
-    last_name = models.CharField(max_length=255, null=True, blank=True)
     phone = models.CharField(
         max_length=12, validators=[phone_regex], null=True, blank=True
     )
 
-    email = models.EmailField()
+
+    email = models.EmailField(blank=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE)
-    photo = models.ImageField(upload_to="profile_images/%d/%m/%Y", null=True, blank=True)
+    photo = models.ImageField(upload_to="profile_images/", null=True, blank=True, default="images/male_img.png")
     level = models.IntegerField(default=1, blank=True, null=True)
+    host = models.BooleanField(help_text="The flag to identify whether the user can host a quiz.", default=False)
+
     objects = ProfileManager()
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
