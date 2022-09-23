@@ -1,29 +1,110 @@
-# from rest_framework.serializers import ModelSerializer
-# from quiz.models import Category, Question, AnswerSingle, AnswerChoice
+from rest_framework.serializers import ModelSerializer
+from quiz.models import Quiz, QuizMeta, Question, Answer, QuizTake, TakeAnswer
+
+class QuizListSerializer(ModelSerializer):
+
+    class Meta:
+        model = Quiz
+        fields = [
+            'id', 
+            'title', 
+            'meta_title',
+            'quiz_type',
+            'content'
+        ]
+
+class QuizSerializer(ModelSerializer):
+
+    class Meta:
+        model = Quiz
+        fields = [
+            'id',
+            'host_id',
+            'title',
+            'meta_title',
+            'slug',
+            'summary',
+            'quiz_type',
+            'score',
+            'published',
+            'starts_at',
+            'ends_at',
+            'content'
+        ]
+
+class QuizMetaSerializer(ModelSerializer):
+
+    class Meta:
+        model = QuizMeta
+        fields = [
+            'id',
+            'quiz',
+            'content'
+        ]
+
+class QuestionListSerializer(ModelSerializer):
+
+    class Meta:
+        model = Question
+        fields = [
+            'id',
+            'quiz',
+            'question_type',
+            'level',
+            'score',
+            'content'
+        ]
+
+class QuestionSerializer(ModelSerializer):
+
+    class Meta:
+        model = Question
+        fields = [
+            'id',
+            'quiz',
+            'question_type',
+            'active',
+            'level',
+            'score',
+            'content'
+        ]
+
+class AnswerSerializer(ModelSerializer):
+
+    class Meta:
+        model = Answer
+        fields = [
+            'id',
+            'quiz',
+            'question',
+            'active',
+            'correct',
+            'content'
+        ]
 
 
-# class CategorySerializer(ModelSerializer):
-#     class Meta:
-#         model = Category
-#         fields = ["id", "label", "featured_question"]
+class QuizTakeSerializer(ModelSerializer):
 
+    class Meta:
+        fields = [
+            'id',
+            'user',
+            'quiz',
+            'status',
+            'score',
+            'starts_at',
+            'finished_at',
+            'content'
+        ]
 
-# class AnswerSingleSerializer(ModelSerializer):
-#     class Meta:
-#         model = AnswerSingle
-#         fields = ["id", "content", "is_correct", "draft", "question"]
+class TakeAnswerSerializer(ModelSerializer):
 
-
-# class AnswerChoiceSerializer(ModelSerializer):
-#     class Meta:
-#         model = AnswerChoice
-#         fields = ["id", "content", "is_correct", "question", "user_answer"]
-
-
-# class QuestionSerializer(ModelSerializer):
-#     answer_single = AnswerSingleSerializer()
-#     answer_choice = AnswerChoiceSerializer()
-
-#     class Meta:
-#         model = Question
-#         fields = ["id", "answer_single", "answer_choice", "draft"]
+    class Meta:
+        model = TakeAnswer
+        fields = [
+            'id',
+            'quiz_take',
+            'answer',
+            'active',
+            'content'
+        ]

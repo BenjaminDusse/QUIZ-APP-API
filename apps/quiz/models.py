@@ -15,7 +15,7 @@ class Quiz(BaseModel):
         ("5", "5"),
         ("6", "6"),
     )
-    host_id = models.PositiveBigIntegerField(default=random.randint(1111111134, 9999999999))
+    host_id = models.PositiveBigIntegerField(default=random.randint(1111111134, 9999999999), unique=True)
     title = models.CharField(max_length=200)
     meta_title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
@@ -39,7 +39,6 @@ class Quiz(BaseModel):
 class QuizMeta(models.Model):
     """ store additional information of tests or quiz including the quiz banner URL """
     quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, null=True)
-    key = models.CharField(max_length=50)
     content = models.TextField(max_length=300)
 
     def __str__(self):
@@ -104,6 +103,8 @@ class Answer(BaseModel):
         verbose_name_plural = "Answer"
 
 class QuizTake(BaseModel):
+    """ Track the enrollment and timing of user attempts to the quizzes"""
+
     ENROLLED = "enrolled"
     STARTED = "started"
     PAUSED = "paused"
@@ -117,7 +118,6 @@ class QuizTake(BaseModel):
         (DECLARED, 'declared'),
 
     )
-    """ Track the enrollment and timing of user attempts to the quizzes"""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='quiz_take')
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="quiz_take")
     status = models.CharField(max_length=200, choices=STATUS_CHOICES)
