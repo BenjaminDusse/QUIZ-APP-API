@@ -20,3 +20,5 @@ class QuizMetaViewSet(ModelViewSet):
     queryset = QuizMeta.objects.all()
     serializer_class = QuizMetaSerializer
 
+class QuestionViewSet(ModelViewSet):
+    pass
