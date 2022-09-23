@@ -21,4 +21,7 @@ class QuizMetaViewSet(ModelViewSet):
     serializer_class = QuizMetaSerializer
 
 class QuestionViewSet(ModelViewSet):
-    pass
+    queryset = Question.objects.select_related("quiz").all()
+    serializer_class = QuestionSerializer
+    ordering = ['question_type']
+

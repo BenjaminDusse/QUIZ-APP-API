@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, StringRelatedField
 from quiz.models import Quiz, QuizMeta, Question, Answer, QuizTake, TakeAnswer
 
 class QuizListSerializer(ModelSerializer):
@@ -42,32 +42,6 @@ class QuizMetaSerializer(ModelSerializer):
             'content'
         ]
 
-class QuestionListSerializer(ModelSerializer):
-
-    class Meta:
-        model = Question
-        fields = [
-            'id',
-            'quiz',
-            'question_type',
-            'level',
-            'score',
-            'content'
-        ]
-
-class QuestionSerializer(ModelSerializer):
-
-    class Meta:
-        model = Question
-        fields = [
-            'id',
-            'quiz',
-            'question_type',
-            'active',
-            'level',
-            'score',
-            'content'
-        ]
 
 class AnswerSerializer(ModelSerializer):
 
@@ -81,6 +55,24 @@ class AnswerSerializer(ModelSerializer):
             'correct',
             'content'
         ]
+
+
+class QuestionSerializer(ModelSerializer):
+    answer_questions = AnswerSerializer(many=True)
+
+    class Meta:
+        model = Question
+        fields = [
+            'id',
+            'quiz',
+            'question_type',
+            'active',
+            'level',
+            'score',
+            'content',
+            'answer_questions',
+        ]
+
 
 
 class QuizTakeSerializer(ModelSerializer):

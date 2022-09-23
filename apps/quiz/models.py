@@ -80,7 +80,7 @@ class Question(BaseModel):
     content = models.TextField(max_length=300)
 
     def __str__(self):
-        return "Level: {},  Type:  {}, Content: {}".format(self.level, self.question_type, self.content)
+        return self.content
 
     class Meta:
         verbose_name = "Questions"
@@ -89,8 +89,8 @@ class Question(BaseModel):
 
 class Answer(BaseModel):
     """ Store the answers of single-choice, multiple-choice and select type questions"""
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, null=True)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, null=True, related_name='answer_quiz')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, related_name='answer_questions')
     active = models.BooleanField(default=False)
     correct = models.BooleanField(default=False)
     content = models.CharField(max_length=200)
