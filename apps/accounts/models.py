@@ -34,12 +34,19 @@ class Profile(BaseModel):
         max_length=12, validators=[phone_regex], null=True, blank=True
     )
 
-
     email = models.EmailField(blank=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, default=MALE)
-    photo = models.ImageField(upload_to="profile_images/", null=True, blank=True, default="images/male_img.png")
+    photo = models.ImageField(
+        upload_to="profile/",
+        null=True,
+        blank=True,
+        default="profile/default.png",
+    )
     level = models.IntegerField(default=1, blank=True, null=True)
-    host = models.BooleanField(help_text="The flag to identify whether the user can host a quiz.", default=False)
+    host = models.BooleanField(
+        help_text="The flag to identify whether the user can host a quiz.",
+        default=False,
+    )
 
     objects = ProfileManager()
     user = models.OneToOneField(
@@ -49,7 +56,7 @@ class Profile(BaseModel):
         null=True,
         blank=True,
     )
-    default_pic_mapping = {'male': 'male_img.jpg', 'female': 'female_img.jpg'}
+    default_pic_mapping = {"male": "male_img.jpg", "female": "female_img.jpg"}
 
     @property
     def full_name(self):
@@ -65,11 +72,8 @@ class Profile(BaseModel):
     #         self.photo = 'images/{}'.format(self.photo[self.gender])
     #     super().save(*args, **kwargs)
 
-
     def __str__(self):
         return self.user.username
-    
-
 
     class Meta:
         ordering = ("-id",)

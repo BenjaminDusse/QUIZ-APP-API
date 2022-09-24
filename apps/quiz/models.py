@@ -3,7 +3,8 @@ from django.db import models
 from django.conf import settings
 from shared.django.model import BaseModel
 
-
+def random_number():
+    return random.randint(10000, 99999)
 
 class Quiz(BaseModel):
     """ Quiz Table to store the quiz data """
@@ -15,7 +16,7 @@ class Quiz(BaseModel):
         ("5", "5"),
         ("6", "6"),
     )
-    host_id = models.PositiveBigIntegerField(default=random.randint(1111111134, 9999999999), unique=True)
+    host_id = models.IntegerField(default=random_number, unique=True)
     title = models.CharField(max_length=200)
     meta_title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
