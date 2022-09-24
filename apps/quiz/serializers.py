@@ -74,10 +74,10 @@ class QuestionSerializer(ModelSerializer):
         ]
 
 
-
 class QuizTakeSerializer(ModelSerializer):
 
     class Meta:
+        model = QuizTake
         fields = [
             'id',
             'user',

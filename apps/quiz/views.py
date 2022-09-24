@@ -25,3 +25,8 @@ class QuestionViewSet(ModelViewSet):
     serializer_class = QuestionSerializer
     ordering = ['question_type']
 
+class QuizTakeViewSet(ModelViewSet):
+    queryset = QuizTake.objects.select_related('quiz')
+    serializer_class = QuizTakeSerializer
+    ordering = ['id']
+
