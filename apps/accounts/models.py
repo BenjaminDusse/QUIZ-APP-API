@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.core.validators import RegexValidator
 from core import settings
@@ -57,6 +58,7 @@ class Profile(BaseModel):
         blank=True,
     )
     default_pic_mapping = {"male": "male_img.jpg", "female": "female_img.jpg"}
+    dob = models.DateTimeField() # for test 
 
     @property
     def full_name(self):
